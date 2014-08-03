@@ -1,5 +1,10 @@
 #!/bin/bash
+set -ueo pipefail
 cd /mirror/
-# [todo] - Scan for specific archs and allow --multiversion
-dpkg-scanpackages pool > Packages
-exit 1
+for arch in amd64 i386; do
+	for distro in $(cd pool/; find * -maxdepth 0 -type d); do
+		# make a directory for the packages file
+		mkdir -p "dists/$distro/main/binary-$arch"
+		dpkg-scanpackages -a "$arch" -m "pool/$distro" > "dists/$distro/main/binary-$arch/Packages"
+	done
+done
