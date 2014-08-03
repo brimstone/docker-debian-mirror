@@ -1,0 +1,5 @@
+#!/bin/bash
+cd /mirror/
+# [todo] - Scan for specific archs and allow --multiversion
+dpkg-scanpackages pool > Packages
+exit 1
