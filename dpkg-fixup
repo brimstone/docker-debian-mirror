@@ -1,10 +1,13 @@
 #!/bin/bash
 set -ueo pipefail
 cd /mirror/
-for arch in amd64 i386; do
-	for distro in $(cd pool/; find * -maxdepth 0 -type d); do
+for distro in $(cd pool/; find * -maxdepth 0 -type d); do
+	for arch in $(find "pool/$distro" -type f -exec dpkg-deb --info \{\} \; | awk '/Arch/ {print $2}' | sort | uniq); do
 		# make a directory for the packages file
 		mkdir -p "dists/$distro/main/binary-$arch"
 		dpkg-scanpackages -a "$arch" -m "pool/$distro" > "dists/$distro/main/binary-$arch/Packages"
 	done
 done
+echo "Removing empty files"
+find /mirror/ -type f -size 0 -delete
+find /mirror/ -type d -delete 2>/dev/null
