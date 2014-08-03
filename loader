@@ -14,3 +14,5 @@ chown -R nobody:nogroup /mirror
 		sleep 1
 	done
 ) &
+
+wait
