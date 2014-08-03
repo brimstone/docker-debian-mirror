@@ -1,6 +1,9 @@
 #!/bin/bash
 set -ueo pipefail
 cd /mirror/
+# Clean out the dists directory.
+# This fixes the edge case of removing the last package from a distro
+rm -rf dists
 for distro in $(cd pool/; find * -maxdepth 0 -type d); do
 	for arch in $(find "pool/$distro" -type f -exec dpkg-deb --info \{\} \; | awk '/Arch/ {print $2}' | sort | uniq); do
 		# make a directory for the packages file
